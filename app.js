@@ -47,10 +47,10 @@ const showData = (data)=>{
 const  [...all] = productDatas
 const {id,title,description,category,category_id,price,quantity,image} = all
 
-console.log(description)
- 
-    for(let i = 0;i<productDatas.length;i++){
-        products.innerHTML += ` <div class="col">
+   for(let i = 0;i<productDatas.length;i++){
+    shortDesc = all[i].description.split(" ").slice(0,13).join(" ")
+    console.log(shortDesc)
+    products.innerHTML += ` <div class="col">
         <div class="card">
           <img
             src="${all[i].image}"
@@ -60,7 +60,7 @@ console.log(description)
           />
           <div class="card-body">
             <h5 class="card-title line-clamp-1 productName">${all[i].title}</h5>
-            <p class="card-text line-clamp-3 productDesc">${all[i].description}</p>
+            <p class="card-text line-clamp-3 productDesc">${shortDesc}...</p>
           </div>
           <div
             class="card-footer w-100 fw-bold d-flex justify-content-between gap-3"
