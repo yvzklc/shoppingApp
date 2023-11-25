@@ -1,6 +1,4 @@
-//!APİ https://anthonyfs.pythonanywhere.com/api/products/
-
-//!shopping cart dom selectors
+var API= "https://anthonyfs.pythonanywhere.com/api/products/"
 const shopCard = document.querySelector(".offcanvas-body")
 const cartProductTotal = document.querySelector(".cartProductTotal")
 const cartProductAmount = document.querySelector(".cartProductAmount")
@@ -24,11 +22,6 @@ const seeDetails = document.querySelector(".seeDetails")
 //!Modal dom selectors
 const modalName = document.querySelector(".modalName")
 const modalBody = document.querySelector(".modalBody")
-
-//!Fetching datas by api
-
-API= "https://anthonyfs.pythonanywhere.com/api/products/"
-
 const getFetch = ()=>{
     fetch(API)
     .then((res) => {
@@ -42,28 +35,26 @@ const getFetch = ()=>{
 
 }
 const showData = (data)=>{
-    productDatas = data
-    
-const  [...all] = productDatas
-const {id,title,description,category,category_id,price,quantity,image} = all
 
-   for(let i = 0;i<productDatas.length;i++){
-    shortDesc = all[i].description.split(" ").slice(0,13).join(" ")
-    console.log(shortDesc)
+const  [...all] = data
+console.log(all)
+const {id,title,description,category,category_id,price,quantity,image} = all
+for(let i = 0;i<data.length;i++){
+    let shortDesc = all[i].description.split(" ").slice(0,13).join("  ")
     products.innerHTML += ` <div class="col">
-        <div class="card">
+        <div class="card h-100">
           <img
             src="${all[i].image}"
             class="p-2 productImg"
             height="250px"
             alt="..."
           />
-          <div class="card-body">
+          <div class="card-body ">
             <h5 class="card-title line-clamp-1 productName">${all[i].title}</h5>
             <p class="card-text line-clamp-3 productDesc">${shortDesc}...</p>
           </div>
           <div
-            class="card-footer w-100 fw-bold d-flex justify-content-between gap-3"
+            class="card-footer w-100  fw-bold d-flex justify-content-between gap-3"
           >
             <span>Price:</span><span class="productPrice">Price: ${all[i].price}</span>
           </div>
@@ -84,7 +75,8 @@ const {id,title,description,category,category_id,price,quantity,image} = all
 
 
    }
-
-
-getFetch()
-
+export const Dataui = ()=>{
+   
+getFetch()    
+    
+}
