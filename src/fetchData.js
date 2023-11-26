@@ -145,17 +145,16 @@ const showData = (data) => {
      (e) => {
     let inpValue = searchInput.value
     const propOwn = Object.getOwnPropertyNames(filterd)
-    if(propOwn.length > 1){
+    if(propOwn.length >= 1 & categoryArea.textContent != "ALL"){
       let filteredInp = filterd.filter((x) => x.title.includes(inpValue))
       console.log(" if")
-
       show(filteredInp, filteredInp.length);
-    }if (categoryArea.value = "ALL"){
+    }else if (categoryArea.textContent = "ALL"){
       let filteredInp = data.filter((x) => x.title.includes(inpValue))
       console.log("else if")
       show(filteredInp, filteredInp.length);
     }else{
-      console.log("else ")
+      console.log("elsee ")
 
       let filteredInp = data.filter((x) => x.title.includes(inpValue))
       show(filteredInp, filteredInp.length);
