@@ -10,7 +10,7 @@ const removeBtn = document.querySelector(".removeBtn");
 const totalPrice = document.querySelector("#totalPrice");
 //!Filter attributes dom selectors
 const searchInput = document.querySelector("#searchInput");
-const category = document.querySelector("#category");
+const categoryArea = document.querySelector("#category");
 //!Category buttons dom selectors
 const btns = document.querySelector("#btns");
 //!products dom selectors
@@ -110,6 +110,8 @@ const showData = (data) => {
       </div>`;
     }
   };
+  var filterd = "";
+  
   btns.addEventListener(
     "click",
 
@@ -123,18 +125,46 @@ const showData = (data) => {
         }
        
 
-        console.log(value);
-        var filtered = data.filter((x) => x.category.includes(value));
-        console.log(filtered);
+       var filtered = data.filter((x) => x.category.includes(value));
+       filterd = filtered 
+      
         clearHTML();
-
+        categoryArea.innerHTML = `${value}`;
         show(filtered, filtered.length);
       }
       else{
+        categoryArea.innerHTML = `${value}`;
         show(data, data.length);
       }
     }
   );
+  
+  searchInput.addEventListener("input",
+  
+  
+     (e) => {
+    let inpValue = searchInput.value
+    const propOwn = Object.getOwnPropertyNames(filterd)
+    if(propOwn.length > 1){
+      let filteredInp = filterd.filter((x) => x.title.includes(inpValue))
+      console.log(" if")
+
+      show(filteredInp, filteredInp.length);
+    }if (categoryArea.value = "ALL"){
+      let filteredInp = data.filter((x) => x.title.includes(inpValue))
+      console.log("else if")
+      show(filteredInp, filteredInp.length);
+    }else{
+      console.log("else ")
+
+      let filteredInp = data.filter((x) => x.title.includes(inpValue))
+      show(filteredInp, filteredInp.length);
+    }
+    
+
+  }
+  )
+
 
   show(data, data.length);
 };
