@@ -19,24 +19,47 @@ const productName = document.querySelector(".productName");
 const productDesc = document.querySelector(".productDesc");
 const productImg = document.querySelector(".productImg");
 const productPrice = document.querySelector(".productPrice");
-const addCart = document.querySelector(".addCart");
+const app = document.querySelector("body");
+
+const addCart = app.querySelectorAll(".addCart");
 const seeDetails = document.querySelector(".seeDetails");
 //!Modal dom selectors
 const modalName = document.querySelector(".modalName");
 const modalBody = document.querySelector(".modalBody");
-const getFetch = () => {
-  fetch(API)
-    .then((res) => {
-      if (!res.ok) {
-        throw new error("something went wrong", res.status);
-      }
-      return res.json();
-    })
-    .then((data) => showData(data))
-    .catch((error) => console.log(error, res.status));
+
+document.addEventListener("DOMContentLoaded", function(){
+async function getFetch() {
+    try {
+      const response = await fetch(
+        "https://anthonyfs.pythonanywhere.com/api/products/"
+      );
+      // 2.1 responstakı kategorilere göre butonları olusturmak için kategorileri uniqueCategories arrayine atıyoruz
+      if (response.ok) {
+        data = await response.json();
+
+        showData(data);
+        }else {
+          console.error("Failed to fetch products:", response.statusText);
+        // Kategorilerin arrayine All diye bir sınıf ekliyoruz
+
+        
+
+        // bu kategorilere göre butonları oluşturacak fonksiyonu çağırıyoruz
+        
+
+        // kategoriye göre ürünleri html e basan fonksiyonu çağırıyoruz
+       
+      } 
+      
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  
 };
-const showData = (data) => {
+  function showData(data,length) {
+  
   const [...all] = data;
+  console.log(all)
   const {
     id,
     title,
@@ -62,55 +85,53 @@ const showData = (data) => {
     "light",
     "dark",
   ];
-  for (let i = 0; i < categoryArr.length; i++) {
+  for (let i = 0; i < 7; i++) {
+    
     btns.innerHTML += `<button  class="btn btn-${colors[i]}">${categoryArr[i]}</button>`;
   }
+  var y = -1;
+  function clearShow() {
+    products.innerHTML = "";
+  }
+  clearShow()
+  for (let i = 0; i < data.length; i++) {
+  
 
+    y = y + 1;
 
-  const show = (data, length) => {
-    var y = -1;
-    function clearShow() {
-      products.innerHTML = "";
-    }
-    clearShow()
-    for (let i = 0; i < length; i++) {
-    
-
-      y = y + 1;
-
-      let shortDesc = data[i].description.split(" ").slice(0, 13).join("  ");
-      products.innerHTML += ` <div class="col">
-        <div class="card h-100">
-          <img
-            src="${data[y].image}"
-            class="p-2 productImg"
-            height="250px"
-            alt="..."
-          />
-          <div class="card-body ">
-            <h5 class="card-title line-clamp-1 productName">${data[y].title}</h5>
-            <p class="card-text line-clamp-3 productDesc">${shortDesc}...</p>
-          </div>
-          <div
-            class="card-footer w-100  fw-bold d-flex justify-content-between gap-3"
-          >
-            <span>Price:</span><span class="productPrice">Price: ${data[y].price}</span>
-          </div>
-          <div class="card-footer w-100 d-flex justify-content-center gap-3">
-            <button class="btn btn-danger addCart">Sepete Ekle</button>
-            <button
-              class="btn btn-primary seeDetails"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              See Details
-            </button>
-          </div>
+    let shortDesc = data[i].description.split(" ").slice(0, 13).join("  ");
+    products.innerHTML += ` <div class="col">
+      <div class="card h-100">
+        <img
+          src="${data[y].image}"
+          class="p-2 productImg"
+          height="250px"
+          alt="..."
+        />
+        <div class="card-body ">
+          <h5 class="card-title line-clamp-1 productName">${data[y].title}</h5>
+          <p class="card-text line-clamp-3 productDesc">${shortDesc}...</p>
         </div>
-      </div>`;
-    }
-  };
-  var filterd = "";
+        <div
+          class="card-footer w-100  fw-bold d-flex justify-content-between gap-3"
+        >
+          <span>Price:</span><span class="productPrice">Price: ${data[y].price}</span>
+        </div>
+        <div class="card-footer w-100 d-flex justify-content-center gap-3">
+          <button id="${data[y].id}"  class="btn btn-danger addCart">Sepete Ekle</button>
+          <button
+            class="btn btn-primary seeDetails"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            See Details
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  }}
+   filterd = "";
   
   btns.addEventListener(
     "click",
@@ -123,22 +144,23 @@ const showData = (data) => {
         function clearHTML() {
           products.innerHTML = "";
         }
+        console.log("saa")
        
-
        var filtered = data.filter((x) => x.category.includes(value));
        filterd = filtered 
       
         clearHTML();
         categoryArea.innerHTML = `${value}`;
-        show(filtered, filtered.length);
+        showData(filtered, filtered.length);
       }
       else{
         categoryArea.innerHTML = `${value}`;
-        show(data, data.length);
+        showData(data, data.length);
       }
     }
   );
-  
+ 
+
   searchInput.addEventListener("input",
   
   
@@ -164,9 +186,17 @@ const showData = (data) => {
   }
   )
 
+  // show(data, data.length);
+  // console.log(app)
+//   addCart.addEventListener("click", zxx())
+//   zxx = (event) => {
+//    // element = event.target
+//    console.log("element")
 
-  show(data, data.length);
-};
-export const Dataui = () => {
-  getFetch();
-};
+//  }
+ 
+getFetch();
+});
+
+
+
