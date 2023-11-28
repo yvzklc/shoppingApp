@@ -27,8 +27,8 @@ const seeDetails = document.querySelector(".seeDetails");
 const modalName = document.querySelector(".modalName");
 const modalBody = document.querySelector(".modalBody");
 
-document.addEventListener("DOMContentLoaded", function(){
-async function getFetch() {
+document.addEventListener("DOMContentLoaded", function () {
+  async function getFetch() {
     try {
       const response = await fetch(
         "https://anthonyfs.pythonanywhere.com/api/products/"
@@ -36,12 +36,11 @@ async function getFetch() {
       // 2.1 responstakı kategorilere göre butonları olusturmak için kategorileri uniqueCategories arrayine atıyoruz
       if (response.ok) {
         data = await response.json();
-        var categories = []
+        var categories = [];
         const uniqueCategories = data.map((product) => {
           if (!categories.includes(product.category)) {
             categories.push(product.category);
           }
-          
         });
         const colors = [
           "primary",
@@ -52,67 +51,56 @@ async function getFetch() {
           "light",
           "dark",
         ];
-        function addCategoryBtns(x){
+        function addCategoryBtns(x) {
           for (let i = 0; i < x.length; i++) {
             btns.innerHTML += `<button  class="btn btn-${colors[i]}">${categories[i]}</button>`;
           }
         }
         showData(data);
-        addCategoryBtns(categories)
-        }else {
-          console.error("Failed to fetch products:", response.statusText);
+        addCategoryBtns(categories);
+      } else {
+        console.error("Failed to fetch products:", response.statusText);
         // Kategorilerin arrayine All diye bir sınıf ekliyoruz
 
-        
-
         // bu kategorilere göre butonları oluşturacak fonksiyonu çağırıyoruz
-        
 
         // kategoriye göre ürünleri html e basan fonksiyonu çağırıyoruz
-       
-      } 
-      
+      }
     } catch (error) {
       console.error("Error:", error);
     }
-  
-};
-
-
-  function showData(data,length) {
-  
-  const [...all] = data;
-  console.log(all)
-  const {
-    id,
-    title,
-    description,
-    category,
-    category_id,
-    price,
-    quantity,
-    image,
-  } = all;
-  // var categoryArr = [];
-  // all.reduce((acc, ctg) => {
-  //   if (categoryArr.indexOf(ctg.category) == -1) {
-  //     categoryArr.push(ctg.category);
-  //   }
-  // });
- 
-
-  var y = -1;
-  function clearShow() {
-    products.innerHTML = "";
   }
-  clearShow()
-  for (let i = 0; i < data.length; i++) {
-  
 
-    y = y + 1;
+  function showData(data, length) {
+    const [...all] = data;
+    console.log(all);
+    const {
+      id,
+      title,
+      description,
+      category,
+      category_id,
+      price,
+      quantity,
+      image,
+    } = all;
+    // var categoryArr = [];
+    // all.reduce((acc, ctg) => {
+    //   if (categoryArr.indexOf(ctg.category) == -1) {
+    //     categoryArr.push(ctg.category);
+    //   }
+    // });
 
-    let shortDesc = data[i].description.split(" ").slice(0, 13).join("  ");
-    products.innerHTML += ` <div class="col">
+    var y = -1;
+    function clearShow() {
+      products.innerHTML = "";
+    }
+    clearShow();
+    for (let i = 0; i < data.length; i++) {
+      y = y + 1;
+
+      let shortDesc = data[i].description.split(" ").slice(0, 13).join("  ");
+      products.innerHTML += ` <div class="col">
       <div class="card h-100">
         <img
           src="${data[y].image}"
@@ -141,68 +129,172 @@ async function getFetch() {
         </div>
       </div>
     </div>`;
+    }
+  }
+  filterd = "";
 
-  }}
-   filterd = "";
-  
   btns.addEventListener(
     "click",
 
     (e) => {
       let value = e.target.textContent;
-      let i = 0
+      let i = 0;
       if (value != "ALL") {
-        i++
+        i++;
         function clearHTML() {
           products.innerHTML = "";
         }
-        console.log("saa")
-       
-       filtered = data.filter((x) => x.category.includes(value));
-       filterd = filtered 
-       console.log(filterd)
+        console.log("saa");
+
+        filtered = data.filter((x) => x.category.includes(value));
+        filterd = filtered;
+        console.log(filterd);
         clearHTML();
         categoryArea.innerHTML = `${value}`;
         showData(filtered, filtered.length);
-      }
-      else{
+      } else {
         categoryArea.innerHTML = `${value}`;
         showData(data, data.length);
       }
     }
   );
- 
 
-  searchInput.addEventListener("input",
-  
-  
-     (e) => {
-    let inpValue = searchInput.value
-    const propOwn = filterd
-    console.log("aaa",propOwn)
-    if(propOwn.length >= 1 & categoryArea.textContent != "ALL"){
-      let filteredInp = propOwn.filter((x) => x.title.includes(inpValue))
-      console.log(" if")
-      showData(filteredInp, filteredInp.length);
-    }else if (categoryArea.textContent = "ALL"){
-      let filteredInp = data.filter((x) => x.title.includes(inpValue))
-      console.log("else if")
-      showData(filteredInp, filteredInp.length);
-    }else{
-      console.log("elsee ")
+  searchInput.addEventListener(
+    "input",
 
-      let filteredInp = data.filter((x) => x.title.includes(inpValue))
-      showData(filteredInp, filteredInp.length);
+    (e) => {
+      let inpValue = searchInput.value;
+      const propOwn = filterd;
+
+      if ((propOwn.length >= 1) & (categoryArea.textContent != "ALL")) {
+        let filteredInp = propOwn.filter((x) => x.title.includes(inpValue));
+
+        showData(filteredInp, filteredInp.length);
+      } else if ((categoryArea.textContent = "ALL")) {
+        let filteredInp = data.filter((x) => x.title.includes(inpValue));
+
+        showData(filteredInp, filteredInp.length);
+      } else {
+        let filteredInp = data.filter((x) => x.title.includes(inpValue));
+        showData(filteredInp, filteredInp.length);
+      }
     }
-    
+  );
 
-  }
-  )
+  getFetch();
+  document.addEventListener("click", (e) => {
+    btnId = e.target.id;
+    var filteredId = data.filter((x) => x.id == btnId);
+    btn = e.target.classList;
+    function increaseFunc() {
+      if ( btn == "fa-solid fa-plus border bg-danger text-white rounded-circle p-2 increaseBtn") {
+        ix = filteredId[0].id;
+        const idd = document.querySelector(
+          `#${CSS.escape(ix)}  .cartProductAmount`
+        );
+        idText = idd.textContent;
+        idd.textContent == idd.textContent++;
+        priceFunc()
+      }
+    }
+    function degreeFunc() {
+      if ( btn == "fa-solid fa-minus border rounded-circle bg-danger text-white p-2 degreeBtn") {
+        ix = filteredId[0].id;
+        const idd = document.querySelector(
+          `#${CSS.escape(ix)}  .cartProductAmount`
+        );
+        idText = idd.textContent;
+       
+        if(idText != 1){
+          idd.textContent == idd.textContent--;
+          priceFunc()
+        }else{
+          idText = idd.textContent;
+        }
+      }
+    }
+    function priceFunc() {
+      productId = filteredId[0].id;
+      productsPrice = filteredId[0].price;
+      const productTotalPrice = document.querySelector(`#${CSS.escape(productId)}  .cartProductTotal`);
+      const amount = document.querySelector(`#${CSS.escape(productId)}  .cartProductAmount`);
+      amountVal = amount.textContent
+      priceVal = productTotalPrice.textContent
+      sum = amountVal * productsPrice
+      productTotalPrice.textContent = sum
+    }
+   
 
+    if (btn == "btn btn-danger addCart") {
+      addCart(filteredId[0].quantity);
+    }
+    if (
+      btn ==
+      "fa-solid fa-plus border bg-danger text-white rounded-circle p-2 increaseBtn"
+    ) {
+      increaseFunc();
+    }
+    if (
+      btn ==
+      "fa-solid fa-minus border rounded-circle bg-danger text-white p-2 degreeBtn"
+    ) {
+      degreeFunc();
+    }
 
- 
-getFetch();
+    function deleteFunc(){
+      const removeBtns = document.querySelectorAll('.removeBtn');
+
+      for (const removeBtn of removeBtns) {
+        removeBtn.addEventListener('click', (event) => {
+          const productId = event.target.parentElement.parentElement.parentElement.parentElement.id;
+          const productElement = document.getElementById(productId);
+      
+          if (productElement && productElement.classList.contains('product')) {
+            productElement.parentNode.removeChild(productElement);
+          }
+        });
+      }
+    }
+    if (
+      btn =
+      "btn btn-danger removeBtn"
+    ) {
+      deleteFunc();
+    }
+    function addCart(quantity) {
+      shopCard.innerHTML += `
+      <div class="card mb-3 product" style="max-width: 540px"  id="${filteredId[0].id}">
+      <div class="row g-0">
+        <div class="col-md-4 my-auto">
+          <img
+            src="${filteredId[0].image}"
+            class="img-fluid rounded-start cartProductImg"
+            alt="..."
+          />
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title cartProductName">${filteredId[0].title}</h5>
+            <div class="d-flex align-items-center gap-2" role="button">
+              <i
+                class="fa-solid fa-minus border rounded-circle bg-danger text-white p-2 degreeBtn"
+                id="${filteredId[0].id}"
+              ></i
+              ><span class="fw-bold cartProductAmount" id="${filteredId[0].id}"> ${quantity}</span
+              ><i
+                class="fa-solid fa-plus border bg-danger text-white rounded-circle p-2 increaseBtn"
+                id="${filteredId[0].id}"
+              ></i>
+            </div>
+            <span class="card-text ">total: </span>
+            <span class="card-text cartProductTotal" id="${filteredId[0].id}">${filteredId[0].price}</span>
+            <br>
+            <br>
+            <button class="btn btn-danger removeBtn">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    }
+  });
 });
-
-
-
