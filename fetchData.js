@@ -36,8 +36,29 @@ async function getFetch() {
       // 2.1 responstakı kategorilere göre butonları olusturmak için kategorileri uniqueCategories arrayine atıyoruz
       if (response.ok) {
         data = await response.json();
-
+        var categories = []
+        const uniqueCategories = data.map((product) => {
+          if (!categories.includes(product.category)) {
+            categories.push(product.category);
+          }
+          
+        });
+        const colors = [
+          "primary",
+          "secondary",
+          "success",
+          "info",
+          "danger",
+          "light",
+          "dark",
+        ];
+        function addCategoryBtns(x){
+          for (let i = 0; i < x.length; i++) {
+            btns.innerHTML += `<button  class="btn btn-${colors[i]}">${categories[i]}</button>`;
+          }
+        }
         showData(data);
+        addCategoryBtns(categories)
         }else {
           console.error("Failed to fetch products:", response.statusText);
         // Kategorilerin arrayine All diye bir sınıf ekliyoruz
@@ -56,6 +77,8 @@ async function getFetch() {
     }
   
 };
+
+
   function showData(data,length) {
   
   const [...all] = data;
@@ -70,25 +93,14 @@ async function getFetch() {
     quantity,
     image,
   } = all;
-  var categoryArr = [];
-  all.reduce((acc, ctg) => {
-    if (categoryArr.indexOf(ctg.category) == -1) {
-      categoryArr.push(ctg.category);
-    }
-  });
-  const colors = [
-    "primary",
-    "secondary",
-    "success",
-    "info",
-    "danger",
-    "light",
-    "dark",
-  ];
-  for (let i = 0; i < 7; i++) {
-    
-    btns.innerHTML += `<button  class="btn btn-${colors[i]}">${categoryArr[i]}</button>`;
-  }
+  // var categoryArr = [];
+  // all.reduce((acc, ctg) => {
+  //   if (categoryArr.indexOf(ctg.category) == -1) {
+  //     categoryArr.push(ctg.category);
+  //   }
+  // });
+ 
+
   var y = -1;
   function clearShow() {
     products.innerHTML = "";
@@ -146,9 +158,9 @@ async function getFetch() {
         }
         console.log("saa")
        
-       var filtered = data.filter((x) => x.category.includes(value));
+       filtered = data.filter((x) => x.category.includes(value));
        filterd = filtered 
-      
+       console.log(filterd)
         clearHTML();
         categoryArea.innerHTML = `${value}`;
         showData(filtered, filtered.length);
@@ -166,34 +178,28 @@ async function getFetch() {
   
      (e) => {
     let inpValue = searchInput.value
-    const propOwn = Object.getOwnPropertyNames(filterd)
+    const propOwn = filterd
+    console.log("aaa",propOwn)
     if(propOwn.length >= 1 & categoryArea.textContent != "ALL"){
-      let filteredInp = filterd.filter((x) => x.title.includes(inpValue))
+      let filteredInp = propOwn.filter((x) => x.title.includes(inpValue))
       console.log(" if")
-      show(filteredInp, filteredInp.length);
+      showData(filteredInp, filteredInp.length);
     }else if (categoryArea.textContent = "ALL"){
       let filteredInp = data.filter((x) => x.title.includes(inpValue))
       console.log("else if")
-      show(filteredInp, filteredInp.length);
+      showData(filteredInp, filteredInp.length);
     }else{
       console.log("elsee ")
 
       let filteredInp = data.filter((x) => x.title.includes(inpValue))
-      show(filteredInp, filteredInp.length);
+      showData(filteredInp, filteredInp.length);
     }
     
 
   }
   )
 
-  // show(data, data.length);
-  // console.log(app)
-//   addCart.addEventListener("click", zxx())
-//   zxx = (event) => {
-//    // element = event.target
-//    console.log("element")
 
-//  }
  
 getFetch();
 });
