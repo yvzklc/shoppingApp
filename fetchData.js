@@ -8,6 +8,7 @@ const degreeBtn = document.querySelector(".degreeBtn");
 const increaceBtn = document.querySelector(".increaseBtn");
 const removeBtn = document.querySelector(".removeBtn");
 const totalPrice = document.querySelector("#totalPrice");
+const card = document.querySelector("#sepet");
 //!Filter attributes dom selectors
 const searchInput = document.querySelector("#searchInput");
 const categoryArea = document.querySelector("#category");
@@ -26,6 +27,7 @@ const seeDetails = document.querySelector(".seeDetails");
 //!Modal dom selectors
 const modalName = document.querySelector(".modalName");
 const modalBody = document.querySelector(".modalBody");
+const modal = document.querySelector("#Modal");
 
 document.addEventListener("DOMContentLoaded", function () {
   async function getFetch() {
@@ -73,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showData(data, length) {
     const [...all] = data;
-    console.log(all);
     const {
       id,
       title,
@@ -123,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
             class="btn btn-primary seeDetails"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
+            id="${data[y].id}"
           >
             See Details
           </button>
@@ -144,11 +146,9 @@ document.addEventListener("DOMContentLoaded", function () {
         function clearHTML() {
           products.innerHTML = "";
         }
-        console.log("saa");
 
         filtered = data.filter((x) => x.category.includes(value));
         filterd = filtered;
-        console.log(filterd);
         clearHTML();
         categoryArea.innerHTML = `${value}`;
         showData(filtered, filtered.length);
@@ -186,33 +186,56 @@ document.addEventListener("DOMContentLoaded", function () {
     btnId = e.target.id;
     var filteredId = data.filter((x) => x.id == btnId);
     btn = e.target.classList;
-    function increaseFunc() {
+   function increaseFunc() {
       if ( btn == "fa-solid fa-plus border bg-danger text-white rounded-circle p-2 increaseBtn") {
-        ix = filteredId[0].id;
-        const idd = document.querySelector(
-          `#${CSS.escape(ix)}  .cartProductAmount`
+        productId = filteredId[0].id;
+        const productContent = document.querySelector(
+          `#${CSS.escape(productId)}  .cartProductAmount`
         );
-        idText = idd.textContent;
-        idd.textContent == idd.textContent++;
+        productText = productContent.textContent;
+        productContent.textContent == productContent.textContent++;
         priceFunc()
+        const productTotalPrice = document.querySelector(`#${CSS.escape(productId)}  .cartProductTotal`);
+        totalFunc()
       }
     }
     function degreeFunc() {
       if ( btn == "fa-solid fa-minus border rounded-circle bg-danger text-white p-2 degreeBtn") {
-        ix = filteredId[0].id;
-        const idd = document.querySelector(
-          `#${CSS.escape(ix)}  .cartProductAmount`
+        productId = filteredId[0].id;
+        const productContent = document.querySelector(
+          `#${CSS.escape(productId)}  .cartProductAmount`
         );
-        idText = idd.textContent;
-       
-        if(idText != 1){
-          idd.textContent == idd.textContent--;
+        productText = productContent.textContent;
+        const productTotalPrice = document.querySelector(`#${CSS.escape(productId)}  .cartProductTotal`);
+        if(productText != 1){
+          productContent.textContent == productContent.textContent--;
           priceFunc()
+          totalFunc()
         }else{
-          idText = idd.textContent;
+          productText = productContent.textContent;
         }
+        
       }
     }
+
+    function totalFunc(){
+      const totalPrice = document.querySelector("#totalPrice");
+      const productPrices = document.querySelectorAll(".cartProductTotal");
+      const values = Array.from(productPrices).map((price) => Number(price.textContent));
+      const allTotal = values.reduce((acc,value) => 
+       acc+value,0)
+      totalPrice.textContent = allTotal
+      
+    }
+    function Counter(){
+      const allAmount = document.querySelectorAll(".cartProductAmount");
+      const values = Array.from(allAmount).map((value) => Number(value.textContent));
+      const allTotal = values.reduce((acc,value) => 
+       acc+value,0)
+      sepet.textContent = allTotal
+      
+    }
+
     function priceFunc() {
       productId = filteredId[0].id;
       productsPrice = filteredId[0].price;
@@ -227,23 +250,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (btn == "btn btn-danger addCart") {
       addCart(filteredId[0].quantity);
+      Counter()
+    }
+    if (btn == "btn btn-primary seeDetails") {
+      addModal(filteredId[0].quantity);
     }
     if (
       btn ==
       "fa-solid fa-plus border bg-danger text-white rounded-circle p-2 increaseBtn"
     ) {
       increaseFunc();
+      Counter()
     }
     if (
       btn ==
       "fa-solid fa-minus border rounded-circle bg-danger text-white p-2 degreeBtn"
     ) {
       degreeFunc();
+      Counter()
     }
 
     function deleteFunc(){
       const removeBtns = document.querySelectorAll('.removeBtn');
-
+         
       for (const removeBtn of removeBtns) {
         removeBtn.addEventListener('click', (event) => {
           const productId = event.target.parentElement.parentElement.parentElement.parentElement.id;
@@ -254,14 +283,21 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
       }
+      
     }
     if (
       btn =
       "btn btn-danger removeBtn"
     ) {
       deleteFunc();
+      totalFunc()
+      Counter()
     }
+ 
     function addCart(quantity) {
+      const existingProduct = shopCard.querySelector(`#${CSS.escape(filteredId[0].id)}`);
+
+      if (!existingProduct) {
       shopCard.innerHTML += `
       <div class="card mb-3 product" style="max-width: 540px"  id="${filteredId[0].id}">
       <div class="row g-0">
@@ -296,5 +332,23 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     </div>`;
     }
+  } 
+  function addModal() {
+    const modalTitle = document.getElementById("exampleModalLabel");
+    const modalBody = document.querySelector(".modalBody");
+
+    modalTitle.textContent = filteredId[0].title
+
+    const productDetailsHTML = `
+      <div class='text-center'>
+      <img src="${filteredId[0].image}" class='p-2' height='250px' alt="..." >
+      <p><strong>Description:</strong> ${filteredId[0].description}</p>
+        <p ><strong>Price:</strong> ${filteredId[0].price} $</p>
+       
+      </div>
+      `;
+
+    modalBody.innerHTML = productDetailsHTML;
+  }
   });
 });
