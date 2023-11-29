@@ -1,6 +1,6 @@
-# shoppingApp
+shoppingApp
 <br>
-a basic e-commerce app ui with api
+A basic e-commerce app ui with api
 <br>
 FEATURES:
 -user can see details of product <br>
