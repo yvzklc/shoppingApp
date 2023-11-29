@@ -1,10 +1,13 @@
 shoppingApp
 <br>
+<br>
 A basic e-commerce app ui with api
 <br>
-FEATURES:
+<br>
+FEATURES: <br>
 -user can see details of product <br>
--user can filter by categories or names by product <br>
+-user can filter by categories or names by product
+<br>
 -user can add products to cart <br>
 -user can increase or decrase amount of product <br>
 <br>
