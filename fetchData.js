@@ -116,10 +116,10 @@ document.addEventListener("DOMContentLoaded", function () {
         <div
           class="card-footer w-100  fw-bold d-flex justify-content-between gap-3"
         >
-          <span>Price:</span><span class="productPrice">Price: ${data[y].price}</span>
+          <span>Price:</span><span class="productPrice">${data[y].price}$</span>
         </div>
         <div class="card-footer w-100 d-flex justify-content-center gap-3">
-          <button id="${data[y].id}"  class="btn btn-danger addCart">Sepete Ekle</button>
+          <button id="${data[y].id}"  class="btn btn-danger addCart">Add Card</button>
           <button
             class="btn btn-primary seeDetails"
             data-bs-toggle="modal"
