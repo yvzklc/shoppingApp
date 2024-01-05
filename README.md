@@ -1,7 +1,7 @@
 shoppingApp
 <br>
 <br>
-A basic e-commerce app ui with api
+A basic e-commerce app ui with api.
 <br>
 <br>
 FEATURES: <br>
